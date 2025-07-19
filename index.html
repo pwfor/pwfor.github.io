@@ -8,21 +8,32 @@
       font-family: Arial, sans-serif;
       background: #121212;
       color: #ffffff;
+      margin: 0;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      gap: 40px;
+    }
+
+    .column {
+      width: 45%;
+      text-align: center;
+      align-content: center;
     }
 
     h1 {
-      font-size: 2em;
+      font-size: 1.5em;
       margin-bottom: 20px;
     }
 
-    #timer {
-      font-size: 1.5em;
+    .timer {
+      font-size: 1.2em;
       background: #1e1e1e;
       padding: 20px;
       border-radius: 10px;
@@ -32,28 +43,43 @@
 </head>
 <body>
 
-  <h1>Od kiedy Miłosz miał umyć tablice minęło:</h1>
-  <div id="timer">Ładowanie...</div>
+  <div class="row">
+    <div class="column">
+      <h1>Od kiedy Miłosz miał umyć tablicę minęło:</h1>
+      <div id="timer-tablica" class="timer">Ładowanie...</div>
+    </div>
+
+    <div class="column">
+      <h1>Od "końca" brazyliany minęło:</h1>
+      <div id="timer-brazyliana" class="timer">Ładowanie...</div>
+    </div>
+  </div>
 
   <script>
-    // (rok, miesiąc - 0-indexed, dzień, godzina, minuta, sekunda)
-    const startDate = new Date(2025, 5, 23, 15, 44, 0); 
+    const startDateTablica = new Date(2025, 5, 23, 15, 44, 0); 
+    const startDateBrazyliana = new Date(2025, 6, 19, 0, 13, 0); 
 
-    function updateTimer() {
-      const now = new Date();
-      const diff = now - startDate;
-
+    function formatTime(diff) {
       const seconds = Math.floor(diff / 1000) % 60;
       const minutes = Math.floor(diff / (1000 * 60)) % 60;
       const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-      document.getElementById("timer").textContent =
-        `${days} dni, ${hours} godz., ${minutes} min, ${seconds} sek`;
+      return `${days} dni, ${hours} godz., ${minutes} min, ${seconds} sek`;
     }
 
-    updateTimer();
-    setInterval(updateTimer, 1000);
+    function updateTimers() {
+      const now = new Date();
+
+      const diffTablica = now - startDateTablica;
+      const diffBrazyliana = now - startDateBrazyliana;
+
+      document.getElementById("timer-tablica").textContent = formatTime(diffTablica);
+      document.getElementById("timer-brazyliana").textContent = formatTime(diffBrazyliana);
+    }
+
+    updateTimers();
+    setInterval(updateTimers, 1000);
   </script>
 
 </body>

@@ -1,87 +1,94 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8">
-  <title>Odliczanie czasu</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: #ffffff;
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  <head>
+    <meta charset="UTF-8">
+    <title>Odliczanie czasu</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #121212;
+        color: #ffffff;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    .row {
-      display: flex;
-      flex-direction: row;
-      gap: 40px;
-    }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: center;
+      }
 
-    .column {
-      width: 45%;
-      text-align: center;
-      align-content: center;
-    }
+      .column {
+        width: 300px;
+        text-align: center;
+      }
 
-    h1 {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
+      h1 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
 
-    .timer {
-      font-size: 1.2em;
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-    }
-  </style>
-</head>
-<body>
+      .timer {
+        font-size: 1.2em;
+        background: #1e1e1e;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row" id="timers-container"></div>
+    <script>
+      const timers = [{
+        title: "Od kiedy łosz miał umyć tablicę minęło:",
+        date: new Date(2025, 5, 23, 15, 44, 0)
+      }, {
+        title: "Od \"końca\" brazyliany minęło:",
+        date: new Date(2025, 6, 19, 0, 13, 0)
+      }, {
+        title: "Od \"wyjścia\" do restauracji:",
+        date: new Date(2025, 10, 1, 0, 0, 1)
+      }, ];
 
-  <div class="row">
-    <div class="column">
-      <h1>Od kiedy łosz miał umyć tablicę minęło:</h1>
-      <div id="timer-tablica" class="timer">Ładowanie...</div>
-    </div>
+      function formatTime(diff) {
+        const seconds = Math.floor(diff / 1000) % 60;
+        const minutes = Math.floor(diff / (1000 * 60)) % 60;
+        const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        return `${days} dni, ${hours} godz., ${minutes} min, ${seconds} sek`;
+      }
 
-    <div class="column">
-      <h1>Od "końca" brazyliany minęło:</h1>
-      <div id="timer-brazyliana" class="timer">Ładowanie...</div>
-    </div>
-  </div>
+      function createTimers() {
+        const container = document.getElementById("timers-container");
+        timers.forEach((timer, index) => {
+          const column = document.createElement("div");
+          column.className = "column";
+          const title = document.createElement("h1");
+          title.textContent = timer.title;
+          const timerDiv = document.createElement("div");
+          timerDiv.className = "timer";
+          timerDiv.id = "timer-" + index;
+          column.appendChild(title);
+          column.appendChild(timerDiv);
+          container.appendChild(column);
+        });
+      }
 
-  <script>
-    const startDateTablica = new Date(2025, 5, 23, 15, 44, 0); 
-    const startDateBrazyliana = new Date(2025, 6, 19, 0, 13, 0); 
-
-    function formatTime(diff) {
-      const seconds = Math.floor(diff / 1000) % 60;
-      const minutes = Math.floor(diff / (1000 * 60)) % 60;
-      const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-      return `${days} dni, ${hours} godz., ${minutes} min, ${seconds} sek`;
-    }
-
-    function updateTimers() {
-      const now = new Date();
-
-      const diffTablica = now - startDateTablica;
-      const diffBrazyliana = now - startDateBrazyliana;
-
-      document.getElementById("timer-tablica").textContent = formatTime(diffTablica);
-      document.getElementById("timer-brazyliana").textContent = formatTime(diffBrazyliana);
-    }
-
-    updateTimers();
-    setInterval(updateTimers, 1000);
-  </script>
-
-</body>
+      function updateTimers() {
+        const now = new Date();
+        timers.forEach((timer, index) => {
+          const diff = now - timer.date;
+          document.getElementById("timer-" + index).textContent = formatTime(diff);
+        });
+      }
+      createTimers();
+      updateTimers();
+      setInterval(updateTimers, 1000);
+    </script>
+  </body>
 </html>
-
